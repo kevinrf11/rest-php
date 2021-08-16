@@ -15,6 +15,7 @@ try {
       case 'getAll':
          $results = $employeeBO->getEmployees();
          echo json_encode($results, JSON_UNESCAPED_UNICODE);
+         //echo json_encode("Servicio temporalmente fuera", JSON_UNESCAPED_UNICODE);
          break;
       case 'getLast':
          $results = $employeeBO->getLastHired();
@@ -23,7 +24,17 @@ try {
       case 'getDataEmp':
          $empNo = $_GET["empNo"];
          $result = $employeeBO->getDataEmployee($empNo);
-         echo json_encode($result);
+         echo json_encode($result, JSON_UNESCAPED_UNICODE);
+         break;
+      case 'newEmp':
+         $firstName = $_POST["firstName"];
+         $lastName = $_POST["lastName"];
+         $gender = $_POST["gender"];
+         $birthDate = $_POST["birthDate"];
+         $result = $employeeBO->insertEmployee($firstName, $lastName, $birthDate, $gender);
+
+         //echo json_encode(array($firstName, $lastName, $gender,$birthDate), JSON_UNESCAPED_UNICODE);
+         echo json_encode($result, JSON_UNESCAPED_UNICODE);
          break;
       default:
          echo json_encode("Error en el servicio, servicio no encontrado");

@@ -1,6 +1,9 @@
 <?php
-require_once './model/Employee.php';
 require_once './connection/DBConnection.php';
+
+require_once './model/Employee.php';
+require_once './model/Salary.php';
+require_once './model/Title.php';
 
 class EmployeeDAO{
     private $conn;
@@ -15,12 +18,11 @@ class EmployeeDAO{
     }
     public function getEmployees(){
         try {
-            $sql = 'SELECT * FROM employees';
+            $sql = 'SELECT * FROM employees;';
             $statement = $this->conn->query($sql);
-            $statement->setFetchMode(PDO::FETCH_CLASS, "Employee");
             $listUsers = array();
-            while ($statement->fetch()) {
-                $row = $statement->fetch();
+            $statement->setFetchMode(PDO::FETCH_CLASS, "Employee");
+            while ($row = $statement->fetch()) {
                 array_push($listUsers, $row);
             }
             
@@ -58,9 +60,9 @@ class EmployeeDAO{
         }
     }
 
-    public function getDataEmp($emp_no){
+    public function getDataEmp($empNo){
         try {
-            if (empty($emp_no)) {
+            if (empty($empNo)) {
                 throw new Exception("Error Processing Request, parameter is null", 1);
             }
             $sql = 'SELECT employees.emp_no, employees.first_name, employees.last_name, employees.gender,departments.dept_name, titles.title,salaries.salary, employees.hire_date, employees.birth_date FROM employees 
@@ -74,9 +76,10 @@ class EmployeeDAO{
             AND titles.to_date > NOW()
             AND dept_emp.to_date > NOW()
             AND dept_emp.from_date < NOW()
-            AND employees.emp_no = '.$emp_no.'
+            AND employees.emp_no = :empNo
             LIMIT 1;';
-            $statement = $this->conn->query($sql);
+            $statement = $this->conn->prepare($sql);
+            $statement->execute(array("empNo"=>intval($empNo)));
             $result = $statement->fetch(PDO::FETCH_ASSOC);
 
             return $result;
@@ -86,5 +89,81 @@ class EmployeeDAO{
             file_put_contents("Stmterrors.txt",$e->getMessage(), FILE_APPEND);
         }
     }
+    public function getLastEmp(){
+        try {
+            $sql = "SELECT * FROM employees ORDER BY emp_no DESC LIMIT 1;";
+            $statement = $this->conn->prepare($sql);
+            $statement->execute();
+            $employee = new Employee();
+            $statement->setFetchMode(PDO::FETCH_INTO, $employee);
+            $result = $statement->fetch();
+            
+            return $result;
+        } catch (Exception $e) {
+            echo "PDO statement error";
+            file_put_contents("Stmterrors.txt",$e->getMessage(), FILE_APPEND);
+        }
+    }
+    public function insertEmp($newEmpNo,$first_name, $last_name, $birth_date, $gender){
+        try {
+            if (empty($first_name) || empty($last_name) || empty($birth_date) || empty($gender)) {
+                throw new Exception("Error Processing Request, parameter is null", 1);
+            }
+            $newEmp = new Employee(intval($newEmpNo), $first_name, $last_name, $birth_date,$gender, date('Y-m-d'));
+            $statement = $this->conn->prepare("INSERT INTO employees(emp_no,first_name,last_name,birth_date,gender,hire_date) value(:emp_no,:first_name, :last_name, :birth_date, :gender, :hire_date);");
+            $statement->execute((array)$newEmp);
+
+            return $newEmp;
+        } catch (Exception $e) {
+            //Show errors
+            echo "PDO statement error";
+            file_put_contents("Stmterrors.txt",$e->getMessage(), FILE_APPEND);
+            return array($first_name, $last_name, $birth_date, $gender);
+        }
+    }
+    public function insertSalary($empNo, $salary){
+        try {
+            if (empty($empNo) || empty($salary)) {
+                throw new Exception("Error Processing Request, parameter is null", 1);
+            }
+            $newSal = new Salary(intval($empNo), intval($salary), date('Y-m-d'),'9999-01-01');
+            $statement = $this->conn->prepare("INSERT INTO salaries(emp_no, salary, from_date, to_date) value (:emp_no, :salary, :from_date, :to_date);");
+            $statement->execute((array)$newSal);
+
+            return $newSal;
+        } catch (Exception $e) {
+            //Show errors
+            echo "PDO statement error";
+            file_put_contents("Stmterrors.txt",$e->getMessage(), FILE_APPEND);
+        }
+    }
+    public function insertEmpDepart($empNo, $deptNo){
+        try {
+            if (empty($empNo) || empty($deptNo)) {
+                throw new Exception("Error Processing Request, parameter is null", 1);
+            }
+        } catch (Exception $e) {
+            //Show errors
+            echo "PDO statement error";
+            file_put_contents("Stmterrors.txt",$e->getMessage(), FILE_APPEND);
+        }
+    }
+    public function insertTitleEmp($empNo, $title){
+        try {
+            if (empty($empNo) || empty($title)) {
+                throw new Exception("Error Processing Request, parameter is null", 1);
+            }
+            $newTitle = new Title(intval($empNo),$title, date('Y-m-d'),'9999-01-01');
+            $statement = $this->conn->prepare("INSERT INTO titles(emp_no, title, from_date, to_date) value(:emp_no, :title, :from_date, :to_date);");
+            $statement->execute((array)$newTitle);
+
+            return $newTitle;
+        } catch (Exception $e) {
+            //Show errors
+            echo "PDO statement error";
+            file_put_contents("Stmterrors.txt",$e->getMessage(), FILE_APPEND);
+        }
+    }
+    
 }
 ?>

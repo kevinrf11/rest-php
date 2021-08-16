@@ -29,6 +29,13 @@ class EmployeeBO {
 
         return $result;
     }
+    public function insertEmployee($firstName, $lastName, $birthDate, $gender){
+        $lastEmp = $this->dao->getLastEmp();
+        $newEmpNo = $lastEmp->emp_no + 1;
+        $result = $this->dao->insertEmp($newEmpNo,$firstName, $lastName, $birthDate, $gender);
+
+        return $result;
+    }
 }
 
 ?>
