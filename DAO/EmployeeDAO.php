@@ -142,6 +142,16 @@ class EmployeeDAO{
             if (empty($empNo) || empty($deptNo)) {
                 throw new Exception("Error Processing Request, parameter is null", 1);
             }
+            $newDeptEmp = new stdClass();
+            $newDeptEmp->emp_no = intval($empNo);
+            $newDeptEmp->dept_no = $deptNo;
+            $newDeptEmp->from_date = date('Y-m-d');
+            $newDeptEmp->to_date = '9999-01-01';
+
+            $statement = $this->conn->prepare("INSERT INTO dept_emp(emp_no, dept_no, from_date, to_date) value(:emp_no, :dept_no, :from_date, :to_date);");
+            $statement->execute((array)$newDeptEmp);
+
+            return $newDeptEmp;
         } catch (Exception $e) {
             //Show errors
             echo "PDO statement error";
@@ -164,6 +174,5 @@ class EmployeeDAO{
             file_put_contents("Stmterrors.txt",$e->getMessage(), FILE_APPEND);
         }
     }
-    
 }
 ?>

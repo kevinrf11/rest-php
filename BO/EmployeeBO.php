@@ -29,12 +29,15 @@ class EmployeeBO {
 
         return $result;
     }
-    public function insertEmployee($firstName, $lastName, $birthDate, $gender){
+    public function insertEmployee($firstName, $lastName, $birthDate, $gender, $title, $salary, $deptNo){
         $lastEmp = $this->dao->getLastEmp();
         $newEmpNo = $lastEmp->emp_no + 1;
-        $result = $this->dao->insertEmp($newEmpNo,$firstName, $lastName, $birthDate, $gender);
+        $insertEmp = $this->dao->insertEmp($newEmpNo,$firstName, $lastName, $birthDate, $gender);
+        $insertDept = $this->dao->insertEmpDepart($newEmpNo,$deptNo);
+        $insertTitle = $this->dao->insertTitleEmp($newEmpNo, $title);
+        $insertSalary = $this->dao->insertSalary($newEmpNo, $salary);
 
-        return $result;
+        return array($insertEmp,$insertDept, $insertTitle, $insertSalary);
     }
 }
 

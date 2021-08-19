@@ -31,7 +31,10 @@ try {
          $lastName = $_POST["lastName"];
          $gender = $_POST["gender"];
          $birthDate = $_POST["birthDate"];
-         $result = $employeeBO->insertEmployee($firstName, $lastName, $birthDate, $gender);
+         $deptNo = $_POST["deptNo"];
+         $salary = $_POST["salary"];
+         $title = $_POST["title"];
+         $result = $employeeBO->insertEmployee($firstName, $lastName, $birthDate, $gender, $title, $salary, $deptNo);
 
          //echo json_encode(array($firstName, $lastName, $gender,$birthDate), JSON_UNESCAPED_UNICODE);
          echo json_encode($result, JSON_UNESCAPED_UNICODE);
