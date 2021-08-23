@@ -18,8 +18,13 @@ try {
          break;
       case 'getDataEmp':
          $empNo = $_GET["empNo"];
-         $result = $employeeBO->getDataEmployee($empNo);
-         echo json_encode($result, JSON_UNESCAPED_UNICODE);
+         if (empty($empNo)) {
+            echo json_encode("Employee number is null", JSON_UNESCAPED_UNICODE);
+         }
+         else{
+            $result = $employeeBO->getDataEmployee($empNo);
+            echo json_encode($result, JSON_UNESCAPED_UNICODE);
+         }
          break;
       case 'newEmp':
          $data = json_decode(file_get_contents('php://input'), true);
@@ -30,9 +35,12 @@ try {
          $deptNo = ($data["deptNo"]);
          $salary = ($data["salary"]);
          $title = ($data["title"]);
-         $result = $employeeBO->insertEmployee($firstName, $lastName, $birthDate, $gender, $title, $salary, $deptNo);
-
-         echo json_encode($result, JSON_UNESCAPED_UNICODE);
+         if (empty($firstName) ||empty($lastName) || empty($gender) || empty($birthDate) || empty($deptNo) || empty($salary) || empty($title) ) {
+            echo json_encode("Missing parameters",JSON_UNESCAPED_UNICODE);
+         } else {
+            $result = $employeeBO->insertEmployee($firstName, $lastName, $birthDate, $gender, $title, $salary, $deptNo);
+            echo json_encode($result, JSON_UNESCAPED_UNICODE);         
+         }
          break;
       default:
          echo json_encode("404 not found");
