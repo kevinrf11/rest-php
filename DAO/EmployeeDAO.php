@@ -28,7 +28,6 @@ class EmployeeDAO{
             
             return $listUsers;
         } catch (Exception $e) {
-            //Show errors
             echo "PDO statement error";
             file_put_contents("Stmterrors.txt",$e->getMessage(), FILE_APPEND);
       }
@@ -54,7 +53,6 @@ class EmployeeDAO{
             
             return $results;
         } catch (Exception $e) {
-            //Show errors
             echo "PDO statement error";
             file_put_contents("Stmterrors.txt",$e->getMessage(), FILE_APPEND);
         }
@@ -115,7 +113,6 @@ class EmployeeDAO{
 
             return $newEmp;
         } catch (Exception $e) {
-            //Show errors
             echo "PDO statement error";
             file_put_contents("Stmterrors.txt",$e->getMessage(), FILE_APPEND);
             return array($first_name, $last_name, $birth_date, $gender);
@@ -132,7 +129,6 @@ class EmployeeDAO{
 
             return $newSal;
         } catch (Exception $e) {
-            //Show errors
             echo "PDO statement error";
             file_put_contents("Stmterrors.txt",$e->getMessage(), FILE_APPEND);
         }
@@ -153,7 +149,6 @@ class EmployeeDAO{
 
             return $newDeptEmp;
         } catch (Exception $e) {
-            //Show errors
             echo "PDO statement error";
             file_put_contents("Stmterrors.txt",$e->getMessage(), FILE_APPEND);
         }
@@ -169,7 +164,6 @@ class EmployeeDAO{
 
             return $newTitle;
         } catch (Exception $e) {
-            //Show errors
             echo "PDO statement error";
             file_put_contents("Stmterrors.txt",$e->getMessage(), FILE_APPEND);
         }

@@ -7,7 +7,6 @@ class EmployeeBO {
         try {
             $this->dao = new EmployeeDAO();
         } catch (Exception $e) {
-            //Show errors
             echo "PDO error connection, try again later";
             file_put_contents("PDOerrors.txt",$e->getMessage(), FILE_APPEND);
         }
@@ -37,7 +36,7 @@ class EmployeeBO {
         $insertTitle = $this->dao->insertTitleEmp($newEmpNo, $title);
         $insertSalary = $this->dao->insertSalary($newEmpNo, $salary);
 
-        return array($insertEmp,$insertDept, $insertTitle, $insertSalary);
+        return true;
     }
 }
 

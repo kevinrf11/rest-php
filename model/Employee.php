@@ -7,7 +7,6 @@ class Employee{
     public $gender;
     public $hire_date;
 
-    //Constructor for object
     function __construct($emp_no = null, $first_name = null, $last_name  = null, $birth_date = null, $gender = null, $hire_date = null ){
         if(isset($emp_no)){
             $this->emp_no = $emp_no;
@@ -28,17 +27,11 @@ class Employee{
             $this->hire_date = $hire_date;
         }
     }
-    //Getter 
     public function __get($name){
         if (property_exists($this, $name)) {
             return $this->$name;
         }
     }
-
-    public function getEmpNo(){
-        return $this->emp_no;
-    }
-    //Setter
     public function __set($name, $value){
         if (property_exists($this, $name)) {
             $this->$name= $value;
@@ -46,7 +39,6 @@ class Employee{
 
         return $this;
     }
-
 }
 
 ?>

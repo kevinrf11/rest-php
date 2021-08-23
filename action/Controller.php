@@ -12,11 +12,6 @@ try {
    $action = explode("?", $splitUri[1]);
 
    switch ($action[0]) {
-      case 'getAll':
-         $results = $employeeBO->getEmployees();
-         echo json_encode($results, JSON_UNESCAPED_UNICODE);
-         //echo json_encode("Servicio temporalmente fuera", JSON_UNESCAPED_UNICODE);
-         break;
       case 'getLast':
          $results = $employeeBO->getLastHired();
          echo json_encode($results, JSON_UNESCAPED_UNICODE);
@@ -27,23 +22,23 @@ try {
          echo json_encode($result, JSON_UNESCAPED_UNICODE);
          break;
       case 'newEmp':
-         $firstName = $_POST["firstName"];
-         $lastName = $_POST["lastName"];
-         $gender = $_POST["gender"];
-         $birthDate = $_POST["birthDate"];
-         $deptNo = $_POST["deptNo"];
-         $salary = $_POST["salary"];
-         $title = $_POST["title"];
+         $data = json_decode(file_get_contents('php://input'), true);
+         $firstName = ($data["firstName"]);
+         $lastName = ($data["lastName"]);
+         $gender = ($data["gender"]);
+         $birthDate = ($data["birthDate"]);
+         $deptNo = ($data["deptNo"]);
+         $salary = ($data["salary"]);
+         $title = ($data["title"]);
          $result = $employeeBO->insertEmployee($firstName, $lastName, $birthDate, $gender, $title, $salary, $deptNo);
 
-         //echo json_encode(array($firstName, $lastName, $gender,$birthDate), JSON_UNESCAPED_UNICODE);
          echo json_encode($result, JSON_UNESCAPED_UNICODE);
          break;
       default:
-         echo json_encode("Error en el servicio, servicio no encontrado");
+         echo json_encode("404 not found");
          break;
    }
 } catch (Exception $e) {
-   echo "Error en el controller";
+   echo "Controller error";
    file_put_contents("Ctrlerrors.txt",$e->getMessage(), FILE_APPEND);
 }
