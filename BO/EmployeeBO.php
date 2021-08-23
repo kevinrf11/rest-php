@@ -29,14 +29,21 @@ class EmployeeBO {
         return $result;
     }
     public function insertEmployee($firstName, $lastName, $birthDate, $gender, $title, $salary, $deptNo){
-        $lastEmp = $this->dao->getLastEmp();
-        $newEmpNo = $lastEmp->emp_no + 1;
-        $insertEmp = $this->dao->insertEmp($newEmpNo,$firstName, $lastName, $birthDate, $gender);
-        $insertDept = $this->dao->insertEmpDepart($newEmpNo,$deptNo);
-        $insertTitle = $this->dao->insertTitleEmp($newEmpNo, $title);
-        $insertSalary = $this->dao->insertSalary($newEmpNo, $salary);
+        try {
+            $lastEmp = $this->dao->getLastEmp();
+            $newEmpNo = $lastEmp->emp_no + 1;
+            $insertEmp = $this->dao->insertEmp($newEmpNo,$firstName, $lastName, $birthDate, $gender);
+            $insertDept = $this->dao->insertEmpDepart($newEmpNo,$deptNo);
+            $insertTitle = $this->dao->insertTitleEmp($newEmpNo, $title);
+            $insertSalary = $this->dao->insertSalary($newEmpNo, $salary);
+            return true;
+        } catch (Exception $e) {
+            echo "Insert employee error";
+            file_put_contents("Stmterrors.txt",$e->getMessage(), FILE_APPEND);
+            return false;
+        }
+     
 
-        return true;
     }
 }
 
